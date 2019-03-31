@@ -1,0 +1,28 @@
+{
+    "name": "inani/laravel-controllers-generator",
+    "description": "A Laravel package to create for you controllers used in routes",
+    "keywords": ["controllers", "generator", "laravel", "php", "commands", "cli"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Inani El Houssain",
+            "email": "inanielhoussain@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+      "psr-4": {
+        "Inani\\ControllersGenerator\\": "src/"
+      }
+    },
+    "require": {
+      "illuminate/support": "~5"
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "Inani\\Larapoll\\ControllersGeneratorServiceProvider"
+        ]
+      }
+    }
+}
