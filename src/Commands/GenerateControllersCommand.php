@@ -3,6 +3,7 @@
 namespace Inani\ControllersGenerator\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Routing\RouteCollection;
 
 class GenerateControllersCommand extends Command
 {
@@ -37,25 +38,24 @@ class GenerateControllersCommand extends Command
      */
     public function handle()
     {
-        $allRoutes = optional(
-            optional(
-                app('router')->getRoutes()
-            )
-        )->getActionList();
+        $allRoutes = app('router')->getRoutes();
 
+
+        $actions = $this->getActionsList($allRoutes);
         // No route are found
-        if (count($allRoutes) === 0) {
+        if (count($actions) === 0) {
             $this->warn('No Routes are found');
 
             return;
         }
 
         $controllers = array_keys(
-            $allRoutes
+            $actions
         );
 
         $cachedControllers = [];
 
+        $notCreated = true;
         // Loop over all actions
         foreach ($controllers as $controller) {
             $controller = explode('@', $controller);
@@ -67,10 +67,32 @@ class GenerateControllersCommand extends Command
                     \Illuminate\Support\Facades\Artisan::call('make:controller', [
                         'name' => $controller[0],
                     ]);
-
+                    $notCreated = false;
                     $this->info("{$controller[0]} Controller has been created.");
                 }
             }
         }
+
+        if($notCreated){
+            $this->warn('No controller is needed to be created');
+        }
+    }
+
+    /**
+     * A Helper method
+     *
+     * @param $routesCollection
+     * @return array|mixed
+     */
+    protected function getActionsList($routesCollection)
+    {
+        try {
+            $reflFoo = new \ReflectionClass(RouteCollection::class);
+            $refRoutes = $reflFoo->getProperty('actionList');
+            $refRoutes->setAccessible(true);
+        } catch (\Exception $e) {
+            return [];
+        }
+        return  $refRoutes->getValue($routesCollection);
     }
 }
