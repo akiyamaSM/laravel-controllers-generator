@@ -21,7 +21,7 @@
     "extra": {
       "laravel": {
         "providers": [
-          "Inani\\Larapoll\\ControllersGeneratorServiceProvider"
+          "Inani\\ControllersGenerator\\ControllersGeneratorServiceProvider"
         ]
       }
     }
